@@ -5,11 +5,11 @@ from sqlalchemy import select, delete, and_
 import random
 
 blueprint = flask.Blueprint(
-    'HelloAPI',
+    'IndexAPI',
     __name__,
     template_folder='templates'
 )
 
 @blueprint.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('Hello.html')
+    return render_template('index.html')
