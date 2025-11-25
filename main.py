@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect
 from flask_login import LoginManager, login_required, logout_user
 
-from api import IndexAPI
+from api import IndexAPI, InterniewAPI, ResultsAPI
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "key"
@@ -52,6 +52,9 @@ def not_found_error(_):
 
 def main():
     app.register_blueprint(IndexAPI.blueprint)
+    app.register_blueprint(InterniewAPI.blueprint)
+    app.register_blueprint(ResultsAPI.blueprint)
+
     app.run(port=5000, host='127.0.0.1', debug=True)
 
 
