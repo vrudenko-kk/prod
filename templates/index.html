@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SciBox Interview - Онбординг</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">SciBox Interview</div>
+        </header>
+
+        <main class="welcome-section">
+            <h1 class="welcome-title">Добро пожаловать на техническое собеседование</h1>
+            <p class="welcome-subtitle">
+                Полностью автоматизированный процесс с AI-интервьюером
+            </p>
+
+            <h2>Выберите направление собеседования</h2>
+            <p class="direction-subtitle">Мы подберем задачи соответствующие вашему выбору</p>
+
+            <div class="direction-grid">
+                <div class="direction-card" onclick="selectDirection(this)">
+                    <div class="direction-icon">⚙️</div>
+                    <div class="direction-name">Backend Development</div>
+                    <div class="direction-desc">Алгоритмы, базы данных, API, системы распределения</div>
+                </div>
+                
+                <div class="direction-card" onclick="selectDirection(this)">
+                    <div class="direction-icon">🎨</div>
+                    <div class="direction-name">Frontend Development</div>
+                    <div class="direction-desc">JavaScript, React, UI/UX, производительность браузера</div>
+                </div>
+                
+                <div class="direction-card" onclick="selectDirection(this)">
+                    <div class="direction-icon">📊</div>
+                    <div class="direction-name">Data Science</div>
+                    <div class="direction-desc">Анализ данных, ML алгоритмы, статистика, визуализация</div>
+                </div>
+                
+                <div class="direction-card" onclick="selectDirection(this)">
+                    <div class="direction-icon">📱</div>
+                    <div class="direction-name">Mobile Development</div>
+                    <div class="direction-desc">iOS/Android, нативные приложения, кроссплатформа</div>
+                </div>
+            </div>
+
+            <div class="start-btn-container">
+                <button class="btn btn-primary" id="start-btn" onclick="startInterview()" disabled>
+                    Начать собеседование
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let selectedDirection = null;
+        
+        function selectDirection(card) {
+            document.querySelectorAll('.direction-card').forEach(c => {
+                c.classList.remove('selected');
+            });
+            card.classList.add('selected');
+            selectedDirection = card.querySelector('.direction-name').textContent;
+            
+            // Активируем кнопку
+            document.getElementById('start-btn').disabled = false;
+        }
+        
+        function startInterview() {
+            if (!selectedDirection) {
+                alert('Пожалуйста, выберите направление собеседования');
+                return;
+            }
+            window.location.href = 'interview.html';
+        }
+    </script>
+</body>
+</html>
