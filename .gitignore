@@ -7,3 +7,4 @@ venv/
 env/
 .env/
 api/__pycache__/
+.env
