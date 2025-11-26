@@ -141,7 +141,6 @@ function addMessage(text, sender) {
     messageElement.className = `message message-${sender}`;
     messageElement.textContent = text;
     messagesContainer.appendChild(messageElement);
-    // Прокрутка вниз
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
@@ -156,3 +155,68 @@ function endInterview() {
         window.location.href = 'results'; 
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const editor = document.querySelector('.code-editor');
+    if (!editor) return;
+
+    editor.addEventListener('paste', async function (e) {
+        e.preventDefault(); // ← блокируем вставку
+
+        const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ff4d4d;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-family: sans-serif;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 10000;
+            animation: fadeInOut 3s ease forwards;
+        `;
+        toast.innerHTML = 'Вставка кода запрещена.<br>Пишите самостоятельно.';
+        document.body.appendChild(toast);
+
+        // Добавляем CSS-анимацию (если её ещё нет)
+        if (!document.querySelector('#toast-style')) {
+            const style = document.createElement('style');
+            style.id = 'toast-style';
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0% { opacity: 0; transform: translateY(-20px); }
+                    10% { opacity: 1; transform: translateY(0); }
+                    90% { opacity: 1; transform: translateY(0); }
+                    100% { opacity: 0; transform: translateY(-20px); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Автоудаление тоста через 3 сек
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-20px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 2700);
+
+        try {
+            await fetch('/api/code-paste', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    code: pastedText.trim().substring(0, 1000),
+                    timestamp: Date.now(),
+                    type: 'blocked_paste'
+                })
+            });
+        } catch (err) {
+            console.warn('Не удалось отправить лог вставки:', err);
+        }
+    });
+});

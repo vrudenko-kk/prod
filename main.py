@@ -78,7 +78,35 @@ def chat():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+from flask import request, jsonify
 
+@app.route('/api/code-paste', methods=['POST'])
+def handle_code_paste():
+    try:
+        if not request.is_json:
+            return jsonify({'status': 'error', 'message': 'Content-Type must be application/json'}), 400
+
+        data = request.get_json(silent=True)  # silent=True — не падает, если JSON невалидный
+        if data is None:
+            return jsonify({'status': 'error', 'message': 'Invalid JSON'}), 400
+
+        pasted_code = data.get('code', '')
+        timestamp = data.get('timestamp', 'unknown')
+        print(f"[PASTE DETECTED] Вставлено:\n{pasted_code[:100]}... in {timestamp}")
+
+        return jsonify({
+            'status': 'received',
+            'message': 'Вставка зафиксирована',
+            'length': len(pasted_code)
+        }), 200
+
+    except Exception as e:
+        error_msg = f"Внутренняя ошибка: {str(e)}"
+        print("Ошибка в /api/code-paste:", error_msg)
+        return jsonify({
+            'status': 'server_error',
+            'message': error_msg
+        }), 500
 
 
 def main():
