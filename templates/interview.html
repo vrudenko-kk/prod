@@ -14,13 +14,12 @@
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: 25%"></div>
                 </div>
-                <div class="timer">45:00</div>
+                <div class="timer">45:00</div> 
                 <button class="btn btn-danger" onclick="endInterview()">Завершить</button>
             </div>
         </header>
 
         <div class="interview-container">
-            <!-- Левая панель - Задача -->
             <div class="problem-panel">
                 <div class="panel-tabs">
                     <div class="tab active">Задача</div>
@@ -40,20 +39,17 @@
                 </div>
             </div>
 
-            <!-- Центральная панель - Редактор -->
             <div class="editor-panel">
                 <div class="editor-header">
                     <select class="language-select">
                         <option value="python">Python</option>
-                        <option value="javascript">JavaScript</option>
-                        <option value="java">Java</option>
                         <option value="cpp">C++</option>
+                        <option value="java">Java</option>
+                        <option value="go">Go</option>
                     </select>
                 </div>
                 <div class="editor-area">
-                    <textarea class="code-editor" placeholder="// Напишите ваш код здесь...">
-
-                    </textarea>
+                    <textarea class="code-editor" placeholder="// Напишите ваш код здесь..."></textarea>
                 </div>
                 <div class="console-panel">
                     <div class="console-content">
@@ -62,7 +58,6 @@
                 </div>
             </div>
 
-            <!-- Правая панель - Чат -->
             <div class="chat-panel">
                 <div class="chat-header">
                     AI Интервьюер
