@@ -1,4 +1,3 @@
-/* Базовые стили */
 * {
     margin: 0;
     padding: 0;
@@ -22,19 +21,18 @@ body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 .container {
     max-width: 1440px;
     margin: 0 auto;
     padding: 20px;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-/* Уникальный хедер */
 .header {
     display: flex;
     justify-content: space-between;
@@ -55,11 +53,10 @@ body {
 }
 
 .logo::before {
-    content: '<3';
+    content: '`';
     font-size: 32px;
 }
 
-/* Уникальные кнопки */
 .btn {
     padding: 14px 28px;
     border: none;
@@ -247,11 +244,11 @@ body {
     font-size: 0.9rem;
 }
 
-/* СТРАНИЦА 2: Уникальный интерфейс IDE */
+/* СТРАНИЦА 2: интерфейс IDE */
 .header-controls {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 60px;
 }
 
 .interview-container {
@@ -412,7 +409,7 @@ body {
 }
 
 .chat-header::before {
-    content: '<3';
+    content: '-';
     color: var(--primary);
 }
 
@@ -470,7 +467,7 @@ body {
     border-color: var(--primary);
 }
 
-/* СТРАНИЦА 3: Уникальные результаты */
+/* СТРАНИЦА 3: РЕЗУЛЬТАТЫ */
 .results-header {
     text-align: center;
     margin-bottom: 40px;
@@ -500,13 +497,27 @@ body {
     width: 35%;
 }
 
+/* Карточки */
+.card {
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    padding: 24px;
+    border: 2px solid var(--border);
+    margin-bottom: 24px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+}
+
+/* Общий счет */
 .score-card {
     text-align: center;
     padding: 40px;
-    margin-bottom: 24px;
-    background: var(--bg-secondary);
-    border-radius: 20px;
-    border: 2px solid var(--border);
     position: relative;
 }
 
@@ -518,92 +529,53 @@ body {
     right: 0;
     height: 4px;
     background: linear-gradient(90deg, var(--primary), var(--accent));
-    border-radius: 20px 20px 0 0;
+    border-radius: 16px 16px 0 0;
 }
 
-.score-main {
-    font-size: 4rem;
+.score-chart {
+    position: relative;
+    height: 200px;
+    margin-bottom: 10px;
+}
+
+.score-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.score-overlay .score-main {
+    font-size: 2.5rem;
     font-weight: 800;
     color: var(--primary);
-    margin-bottom: 8px;
+    margin-bottom: 5px;
+    line-height: 1;
 }
 
-.score-level {
-    font-size: 1.2rem;
+.score-overlay .score-level {
+    font-size: 1rem;
     color: var(--text-secondary);
-    font-weight: 600;
+    line-height: 1.2;
 }
 
-.radar-placeholder {
+/* Контейнеры для графиков */
+.chart-container {
     height: 300px;
-    background: var(--bg-secondary);
-    border-radius: 16px;
-    margin-bottom: 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-secondary);
-    border: 2px solid var(--border);
-    border: 2px dashed var(--border);
+    position: relative;
+    margin-top: 15px;
 }
 
-.placeholder-text {
-    color: var(--text-secondary);
-    text-align: center;
-    font-style: italic;
+/* Убедимся что canvas занимает всю площадь */
+canvas {
+    width: 100% !important;
+    height: 100% !important;
 }
 
-.placeholder-hint {
-    color: var(--border);
-    font-size: 0.9rem;
-    text-align: center;
-    margin-top: 10px;
-}
-
-.placeholder-icon {
-    font-size: 3rem;
-    text-align: center;
-    margin-bottom: 15px;
-    opacity: 0.5;
-}
-
-.tasks-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.task-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.2s ease;
-}
-
-.task-item:hover {
-    background: var(--bg-tertiary);
-}
-
-.task-item:last-child {
-    border-bottom: none;
-}
-
-.task-item.placeholder {
-    opacity: 0.7;
-}
-
-.task-item.placeholder .score-placeholder {
-    color: var(--text-secondary);
-    font-style: italic;
-}
-
-.score-passed { color: #10B981; }
-.score-average { color: #F59E0B; }
-.score-failed { color: #EF4444; }
-
+/* Списки */
 .bullet-list {
     list-style: none;
     margin-top: 16px;
@@ -629,11 +601,6 @@ body {
     font-weight: bold;
 }
 
-.placeholder-list .placeholder-item {
-    color: var(--text-secondary) !important;
-    font-style: italic;
-}
-
 .results-actions {
     display: flex;
     justify-content: space-between;
@@ -645,8 +612,7 @@ body {
 .problem-panel,
 .editor-panel,
 .chat-panel,
-.score-card,
-.radar-placeholder {
+.score-card {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
@@ -655,4 +621,78 @@ body {
 .btn:hover,
 .direction-card:hover {
     transition: all 0.2s ease;
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+    .results-container {
+        flex-direction: column;
+    }
+    
+    .results-right {
+        width: 100%;
+        margin-top: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .direction-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .interview-container {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .problem-panel,
+    .chat-panel {
+        width: 100%;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+    
+    .score-chart {
+        height: 180px;
+    }
+    
+    .score-overlay .score-main {
+        font-size: 2rem;
+    }
+    
+    .card {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .results-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+
+.radar-placeholder,
+.tasks-list,
+.task-item,
+.score-placeholder,
+.placeholder-text,
+.placeholder-hint,
+.placeholder-icon {
+    display: none;
 }
