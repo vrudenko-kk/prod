@@ -110,15 +110,68 @@ function startTimer(durationInSeconds) {
 function sendMessage() {
     const input = document.querySelector('.chat-input');
     const message = input.value.trim();
-    if (message) {
-        addMessage(message, 'user');
-        input.value = '';
-
-        // Заглушка ответа AI
-        setTimeout(() => {
-            addMessage('Спасибо за ваш ответ! Продолжайте работу над задачей.', 'ai');
-        }, 500);
+    
+    if (!message) {
+        return;
     }
+    
+    // 1. Сначала вызываем reCAPTCHA API, чтобы получить токен
+    grecaptcha.ready(function() {
+        // !!! ЗАМЕНИТЬ НА ВАШ ПУБЛИЧНЫЙ КЛЮЧ !!!
+        const SITE_KEY_JS = 'ВАШ_ПУБЛИЧНЫЙ_КЛЮЧ_RECAPTCHA'; 
+
+        grecaptcha.execute(SITE_KEY_JS, {action: 'submit'}).then(function(token) {
+            // 2. Получив токен, отправляем его вместе с сообщением на наш сервер
+            sendVerificationRequest(message, token);
+        });
+    });
+}
+
+/**
+ * Отправляет токен и сообщение на бэкенд для верификации и получения ответа AI.
+ * @param {string} message - Сообщение пользователя.
+ * @param {string} token - Токен reCAPTCHA.
+ */
+function sendVerificationRequest(message, token) {
+    const FORM_URL = '/verify'; // Маршрут в app.py
+    const messageInput = document.querySelector('.chat-input');
+
+    // Показываем сообщение пользователя сразу, пока ждем ответа
+    addMessage(message, 'user');
+    messageInput.value = ''; 
+    
+    const formData = new FormData();
+    formData.append('message', message);
+    formData.append('g-recaptcha-response', token); // Главное: токен reCAPTCHA
+
+    fetch(FORM_URL, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Верификация успешна, добавляем ответ AI
+            const aiResponse = data.ai_response || 'Получен ответ от AI.';
+            setTimeout(() => {
+                addMessage(aiResponse, 'ai');
+            }, 500);
+            
+        } else {
+            // Верификация не пройдена
+            setTimeout(() => {
+                addMessage(`❌ Ошибка верификации reCAPTCHA: ${data.message}`, 'ai');
+            }, 500);
+            console.error('Ошибка верификации reCAPTCHA:', data);
+        }
+    })
+    .catch(error => {
+        // Ошибка сети
+        setTimeout(() => {
+            addMessage('Произошла ошибка сети. Не удалось связаться с сервером.', 'ai');
+        }, 500);
+        console.error('Ошибка Fetch:', error);
+    });
 }
 
 function addMessage(text, sender) {
