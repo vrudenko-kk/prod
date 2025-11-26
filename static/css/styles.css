@@ -378,6 +378,43 @@ body {
     border-top: 2px solid var(--border);
 }
 
+/* Стили для консоли и кнопки очистки */
+.console-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.console-header .btn-text {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.console-header .btn-text:hover {
+    color: var(--primary);
+    background: transparent;
+}
+
+.console-content {
+    padding: 20px;
+    height: calc(100% - 49px); 
+    overflow-y: auto;
+    font-family: 'Fira Code', monospace;
+    color: var(--accent);
+    line-height: 1.4;
+    white-space: pre-wrap;
+}
+
 .console-content {
     padding: 20px;
     height: 100%;
