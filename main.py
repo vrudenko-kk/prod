@@ -1,13 +1,15 @@
 from flask import Flask, render_template, redirect,request,jsonify
 from flask_login import LoginManager, login_required, logout_user
 import requests
-
+from dotenv import load_dotenv
+import os
 from api import IndexAPI, InterniewAPI, ResultsAPI
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "key"
-SITE_KEY = "6LeNDRksAAAAAFpfLym3unGOmDpGMqTZybb_6QA1"
-SECRET_KEY_RECAPTCHA = "6LeNDRksAAAAAKhsHP1-N8qbHTcYrA7cStpyoVo5"
+load_dotenv()
+SITE_KEY = os.environ.get('SITE_KEY')
+SECRET_KEY_RECAPTCHA = os.environ.get('SECRET_KEY_RECAPTCHA')
 
 login_manager = LoginManager()
 login_manager.init_app(app)
