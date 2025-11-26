@@ -168,10 +168,6 @@ def verify_recaptcha():
 
 
 def main():
-    app.register_blueprint(IndexAPI.blueprint)
-    app.register_blueprint(InterviewAPI.blueprint)
-    app.register_blueprint(ResultsAPI.blueprint)
-
     app.run(port=5000, host='127.0.0.1', debug=True)
 
 
