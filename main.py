@@ -3,13 +3,24 @@ from flask_login import LoginManager, login_required, logout_user
 import requests
 from dotenv import load_dotenv
 import os
-from api import IndexAPI, InterniewAPI, ResultsAPI
+from api import IndexAPI, InterviewAPI, ResultsAPI
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "key"
 load_dotenv()
 SITE_KEY = os.environ.get('SITE_KEY')
 SECRET_KEY_RECAPTCHA = os.environ.get('SECRET_KEY_RECAPTCHA')
+
+
+from api.IndexAPI import blueprint as index_bp
+from api.InterviewAPI import blueprint as interview_bp
+from api.ResultsAPI import blueprint as results_bp
+
+# Регистрация (глобально!)
+app.register_blueprint(index_bp)
+app.register_blueprint(interview_bp)
+app.register_blueprint(results_bp)
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -114,19 +125,13 @@ def handle_code_paste():
         }), 500
 
 
-def main():
-    app.register_blueprint(IndexAPI.blueprint)
-    app.register_blueprint(InterniewAPI.blueprint)
-    app.register_blueprint(ResultsAPI.blueprint)
-
-    app.run(port=5000, host='127.0.0.1', debug=True)
 @app.route('/verify', methods=['POST'])
 def verify_recaptcha():
     """Обрабатывает AJAX-запрос с токеном reCAPTCHA и проверяет его."""
-    
+
     recaptcha_response = request.form.get('g-recaptcha-response')
-    user_message = request.form.get('message') 
-    
+    user_message = request.form.get('message')
+
     if not recaptcha_response:
         return jsonify({'success': False, 'message': 'Токен reCAPTCHA отсутствует'}), 400
 
@@ -134,7 +139,7 @@ def verify_recaptcha():
         'secret': SECRET_KEY_RECAPTCHA,
         'response': recaptcha_response
     }
-    
+
     VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify"
     try:
         response = requests.post(VERIFY_URL, data=payload)
@@ -143,16 +148,16 @@ def verify_recaptcha():
         return jsonify({'success': False, 'message': f'Ошибка при связи с Google: {e}'}), 500
 
     if result.get('success'):
-        score = result.get('score', 1.0) 
-        
+        score = result.get('score', 1.0)
+
         # Рекомендованный порог для reCAPTCHA v3
         if score >= 0.5:
             # TODO: Здесь вызывайте ваш LLM API (llm.t1v.scibox.tech)
             # Временно используем заглушку
             LLM_RESPONSE = f"Спасибо за ваш вопрос! reCAPTCHA успешно пройдена. Счет - {score}"
-            
+
             return jsonify({
-                'success': True, 
+                'success': True,
                 'score': score,
                 'ai_response': LLM_RESPONSE
             }), 200
@@ -160,6 +165,16 @@ def verify_recaptcha():
             return jsonify({'success': False, 'message': f'Слишком низкий скор ({score})', 'score': score}), 403
     else:
         return jsonify({'success': False, 'message': 'Неудачная верификация', 'errors': result.get('error-codes')}), 403
+
+
+def main():
+    app.register_blueprint(IndexAPI.blueprint)
+    app.register_blueprint(InterviewAPI.blueprint)
+    app.register_blueprint(ResultsAPI.blueprint)
+
+    app.run(port=5000, host='127.0.0.1', debug=True)
+
+
 
 if __name__ == '__main__':
     main()
