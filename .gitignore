@@ -2,3 +2,4 @@
 /shelf/
 /workspace.xml
 .venv/
+api/__pycache__/
